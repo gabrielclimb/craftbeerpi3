@@ -42,7 +42,7 @@ class DummyTempSensor(SensorActive):
         Called one at the startup for all sensors
         :return: 
         '''
-
+    @cbpi.emit_event
 
 
 
