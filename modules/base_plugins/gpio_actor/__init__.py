@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import time
-
 from modules import cbpi
 from modules.core.hardware import ActorBase, SensorPassive, SensorActive
 from modules.core.props import Property
@@ -14,11 +13,13 @@ except Exception as e:
     pass
 
 
-
 @cbpi.actor
 class GPIOSimple(ActorBase):
 
-    gpio = Property.Select("GPIO", options=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27], description="GPIO to which the actor is connected")
+    gpio = Property.Select("GPIO",
+                           options=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
+                                    15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27],
+                           description="GPIO to which the actor is connected")
 
     def init(self):
         GPIO.setup(int(self.gpio), GPIO.OUT)
@@ -32,10 +33,14 @@ class GPIOSimple(ActorBase):
         print "GPIO OFF"
         GPIO.output(int(self.gpio), 0)
 
+
 @cbpi.actor
 class GPIOPWM(ActorBase):
 
-    gpio = Property.Select("GPIO", options=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27], description="GPIO to which the actor is connected")
+    gpio = Property.Select("GPIO",
+                           options=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
+                                    15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27],
+                           description="GPIO to which the actor is connected")
     frequency = Property.Number("Frequency (Hz)", configurable=True)
 
     p = None
@@ -44,7 +49,6 @@ class GPIOPWM(ActorBase):
     def init(self):
         GPIO.setup(int(self.gpio), GPIO.OUT)
         GPIO.output(int(self.gpio), 0)
-
 
     def on(self, power=None):
         if power is not None:
@@ -74,7 +78,10 @@ class GPIOPWM(ActorBase):
 @cbpi.actor
 class RelayBoard(ActorBase):
 
-    gpio = Property.Select("GPIO", options=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27], description="GPIO to which the actor is connected")
+    gpio = Property.Select("GPIO",
+                           options=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+                                    16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27],
+                           description="GPIO to which the actor is connected")
 
     def init(self):
         GPIO.setup(int(self.gpio), GPIO.OUT)
@@ -88,10 +95,9 @@ class RelayBoard(ActorBase):
 
         GPIO.output(int(self.gpio), 1)
 
+
 @cbpi.actor
 class Dummy(ActorBase):
-
-
     def on(self, power=100):
         '''
         Code to switch on the actor
