@@ -17,6 +17,7 @@ blueprint = Blueprint('addon', __name__)
 
 modules = {}
 
+
 def merge(source, destination):
     """
     Helper method to merge two dicts
@@ -34,6 +35,7 @@ def merge(source, destination):
 
     return destination
 
+
 @blueprint.route('/', methods=['GET'])
 def getPlugins():
     """
@@ -48,6 +50,7 @@ def getPlugins():
 
     return json.dumps(result)
 
+
 @blueprint.route('/<name>', methods=['GET'])
 def getFile(name):
     """
@@ -56,6 +59,7 @@ def getFile(name):
     :return: the plugin code from __init__.py
     """
     return send_from_directory('./plugins/'+name, "__init__.py")
+
 
 @blueprint.route('/<name>', methods=['PUT'])
 def createPlugin(name):
@@ -76,8 +80,6 @@ def createPlugin(name):
         return ('', 500)
 
 
-
-
 @blueprint.route('/<name>', methods=['POST'])
 def saveFile(name):
 
@@ -92,6 +94,7 @@ def saveFile(name):
 
     return ('', 204)
 
+
 @blueprint.route('/<name>', methods=['DELETE'])
 def deletePlugin(name):
 
@@ -105,6 +108,7 @@ def deletePlugin(name):
     shutil.rmtree("./modules/plugins/"+name)
     cbpi.notify("Plugin deleted", "Plugin %s deleted successfully" % name)
     return ('', 204)
+
 
 @blueprint.route('/<name>/reload/', methods=['POST'])
 def reload(name):
@@ -160,23 +164,22 @@ def update_addon(name):
     repo = Repo("./modules/plugins/%s/" % (name))
     o = repo.remotes.origin
     info = o.pull()
-    cbpi.notify("Plugin Updated", "Plugin %s updated successfully. Please restart the system" % name)
+    cbpi.notify("Plugin Updated",
+                "Plugin %s updated successfully. Please restart the system" % name)
     return ('', 204)
 
 
 def loadCorePlugins():
     for filename in os.listdir("./modules/base_plugins"):
-
-
         if os.path.isdir("./modules/base_plugins/"+filename) is False:
             continue
         try:
             modules[filename] = import_module("modules.base_plugins.%s" % (filename))
         except Exception as e:
-
-
-            cbpi.notify("Failed to load plugin %s " % filename, str(e), type="danger", timeout=None)
+            cbpi.notify("Failed to load plugin %s " % filename, str(e),
+                        type="danger", timeout=None)
             cbpi.app.logger.error(e)
+
 
 def loadPlugins():
     for filename in os.listdir("./modules/plugins"):
@@ -185,13 +188,16 @@ def loadPlugins():
         try:
             modules[filename] = import_module("modules.plugins.%s" % (filename))
         except Exception as e:
-            cbpi.notify("Failed to load plugin %s " % filename, str(e), type="danger", timeout=None)
+            cbpi.notify("Failed to load plugin %s " % filename, str(e),
+                        type="danger", timeout=None)
             cbpi.app.logger.error(e)
 
-#@cbpi.initalizer(order=1)
+
+# @cbpi.initalizer(order=1)
 def initPlugins():
     loadCorePlugins()
     loadPlugins()
+
 
 @cbpi.initalizer(order=2)
 def init(cbpi):
