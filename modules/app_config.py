@@ -1,13 +1,13 @@
 
 import json
-import sys, os
+import sys
+import os
 from flask import Flask, render_template, redirect, json, g
 
 
 from flask_socketio import SocketIO, emit
 
 import logging
-
 
 
 from modules.core.core import CraftBeerPi, ActorBase, SensorBase
@@ -17,7 +17,8 @@ app = Flask(__name__)
 
 FORMAT = '%(asctime)-15s - %(levelname)s - %(message)s'
 
-logging.basicConfig(filename='./logs/app.log',level=logging.INFO, format=FORMAT)
+logging.basicConfig(filename='./logs/app.log', level=logging.INFO,
+                    format=FORMAT)
 app.config['SECRET_KEY'] = 'craftbeerpi'
 app.config['UPLOAD_FOLDER'] = './upload'
 
@@ -46,9 +47,10 @@ class ComplexEncoder(json.JSONEncoder):
             pass
         return None
 
+
 app.json_encoder = ComplexEncoder
 socketio = SocketIO(app, json=json, logging=False)
-cbpi   = CraftBeerPi(app, socketio)
+cbpi = CraftBeerPi(app, socketio)
 
 app.logger.info("##########################################")
 app.logger.info("### NEW STARTUP Version 3.0")

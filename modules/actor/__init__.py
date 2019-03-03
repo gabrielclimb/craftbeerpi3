@@ -3,10 +3,12 @@ from flask_classy import route
 from modules import DBModel, cbpi
 from modules.core.baseview import BaseView
 
+
 class Actor(DBModel):
-    __fields__ = ["name","type", "config", "hide"]
+    __fields__ = ["name", "type", "config", "hide"]
     __table_name__ = "actor"
     __json_fields__ = ["config"]
+
 
 class ActorView(BaseView):
     model = Actor
@@ -57,7 +59,8 @@ class ActorView(BaseView):
 
     @route("/<id>/toggle/<int:t>", methods=["POST"])
     def toggleTime(self, id, t):
-        t = self.api.socketio.start_background_task(target=self.toggleTimeJob, id=id, t=t)
+        t = self.api.socketio.start_background_task(
+            target=self.toggleTimeJob, id=id, t=t)
         return ('', 204)
 
     @route('<int:id>/action/<method>', methods=["POST"])
