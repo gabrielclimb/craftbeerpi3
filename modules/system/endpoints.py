@@ -1,12 +1,11 @@
 import yaml
+import time
+import pprint
+
+from git import Repo, Git
 from flask import json, url_for, Response
 from flask_classy import FlaskView, route
-from git import Repo, Git
-
 from modules.app_config import cbpi
-
-import pprint
-import time
 
 
 class SystemView(FlaskView):
@@ -59,8 +58,10 @@ class SystemView(FlaskView):
         # Tags
         tags = []
         for t in repo.tags:
-            tags.append({"name": t.name, "commit": str(t.commit), "date": t.commit.committed_date,
-                         "committer": t.commit.committer.name, "message": t.commit.message})
+            tags.append({"name": t.name, "commit": str(t.commit),
+                         "date": t.commit.committed_date,
+                         "committer": t.commit.committer.name,
+                         "message": t.commit.message})
         try:
             branch_name = repo.active_branch.name
             # test1
@@ -73,7 +74,9 @@ class SystemView(FlaskView):
         for c in list(commits_behind):
             changes.append({"committer": c.committer.name, "message": c.message})
 
-        return json.dumps({"tags": tags, "headcommit": str(repo.head.commit), "branchname": branch_name,
+        return json.dumps({"tags": tags,
+                           "headcommit": str(repo.head.commit),
+                           "branchname": branch_name,
                            "master": {"changes": changes}})
 
     @route('/check_update', methods=['GET'])
@@ -95,7 +98,8 @@ class SystemView(FlaskView):
         repo = Repo('./')
         o = repo.remotes.origin
         info = o.pull()
-        cbpi.notify("Pull successful", "The lasted updated was downloaded. Please restart the system")
+        cbpi.notify("Pull successful",
+                    "The lasted updated was downloaded. Please restart the system")
         return ('', 204)
 
     @route('/dump', methods=['GET'])
@@ -109,9 +113,9 @@ class SystemView(FlaskView):
         vf = self.api.app.view_functions
 
         for f in self.api.app.view_functions:
-            print  f
+            print (f)
         endpoints = {}
-        re =  {
+        re = {
             "swagger": "2.0",
             "host": "",
             "info": {
@@ -127,7 +131,10 @@ class SystemView(FlaskView):
             if "HEAD" in r.methods: r.methods.remove("HEAD")
             if "OPTIONS" in r.methods: r.methods.remove("OPTIONS")
             for m in rule.methods:
-                endpoints[rule.rule][m] = dict(summary="", description="", consumes=["application/json"],produces=["application/json"])
+                endpoints[rule.rule][m] = dict(summary="",
+                                               description="",
+                                               consumes=["application/json"],
+                                               produces=["application/json"])
 
         with open("config/version.yaml", 'r') as stream:
 
@@ -135,7 +142,6 @@ class SystemView(FlaskView):
         pprint.pprint(y)
         pprint.pprint(re)
         return Response(yaml.dump(re), mimetype='text/yaml')
-
 
 
 @cbpi.initalizer()

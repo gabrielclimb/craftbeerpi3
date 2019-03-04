@@ -27,7 +27,6 @@ class BaseView(FlaskView):
     def _pre_post_callback(self, data):
         pass
 
-
     def _post_post_callback(self, m):
         pass
 
@@ -49,7 +48,6 @@ class BaseView(FlaskView):
     def _post_put_callback(self, m):
         pass
 
-
     @route('/<int:id>', methods=["PUT"])
     def put(self, id):
         data = request.json
@@ -69,7 +67,6 @@ class BaseView(FlaskView):
 
             self._post_put_callback(m)
             return json.dumps(m)
-
 
     def _pre_delete_callback(self, m):
         pass

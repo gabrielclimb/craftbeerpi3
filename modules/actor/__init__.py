@@ -65,7 +65,6 @@ class ActorView(BaseView):
 
     @route('<int:id>/action/<method>', methods=["POST"])
     def action(self, id, method):
-
         cbpi.cache.get("actors").get(id).instance.__getattribute__(method)()
         return ('', 204)
 

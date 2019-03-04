@@ -5,11 +5,12 @@ from flask_classy import route
 from modules import DBModel, cbpi, get_db
 from modules.core.baseview import BaseView
 
+
 class Config(DBModel):
     __fields__ = ["type", "value", "description", "options"]
     __table_name__ = "config"
     __json_fields__ = ["options"]
-    __priamry_key__ = "name"
+    __primary_key__ = "name"
 
 
 class ConfigView(BaseView):
@@ -49,6 +50,7 @@ class ConfigView(BaseView):
             for key, value  in cls.model.get_all().iteritems():
                 cls.post_init_callback(value)
                 cls.api.cache[cls.cache_key][value.name] = value
+
 
 @cbpi.initalizer(order=0)
 def init(cbpi):

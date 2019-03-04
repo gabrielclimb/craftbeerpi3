@@ -14,7 +14,6 @@ import shutil
 
 blueprint = Blueprint('addon', __name__)
 
-
 modules = {}
 
 
@@ -44,7 +43,8 @@ def getPlugins():
     """
     result = []
     for filename in os.listdir("./modules/plugins"):
-        if filename.endswith(".DS_Store") or filename.endswith(".py") or filename.endswith(".pyc"):
+        if filename.endswith(".DS_Store") or filename.endswith(".py") or \
+                filename.endswith(".pyc"):
             continue
         result.append(filename)
 
@@ -82,13 +82,12 @@ def createPlugin(name):
 
 @blueprint.route('/<name>', methods=['POST'])
 def saveFile(name):
-
     """
     save plugin code. code is provides via http body
     :param name: the plugin name
     :return: empty http reponse
     """
-    with open("./modules/plugins/"+name+"/__init__.py", "wb") as fo:
+    with open("./modules/plugins/" + name + "/__init__.py", "wb") as fo:
         fo.write(request.get_data())
     cbpi.emit_message("PLUGIN %s SAVED" % (name))
 
@@ -97,7 +96,6 @@ def saveFile(name):
 
 @blueprint.route('/<name>', methods=['DELETE'])
 def deletePlugin(name):
-
     """
     Delete plugin
     :param name: plugin name
@@ -126,7 +124,7 @@ def reload(name):
             cache["modules"][name] = import_module("modules.plugins.%s" % (name))
             return ('', 204)
     except Exception as e:
-        cbpi.emit_message("REALOD OF PLUGIN %s FAILED" % (name))
+        cbpi.emit_message("RELOAD OF PLUGIN %s FAILED" % (name))
         return json.dumps(e.message)
 
 

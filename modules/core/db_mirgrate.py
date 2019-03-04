@@ -3,6 +3,7 @@ import os
 from modules import  cbpi
 from db import get_db
 
+
 def execute_file(curernt_version, data):
     if curernt_version >= data["version"]:
         cbpi.app.logger.info("SKIP DB FILE: %s" % data["file"])
@@ -15,12 +16,14 @@ def execute_file(curernt_version, data):
                 cur = conn.cursor()
                 for s in sqlCommands:
                     cur.execute(s)
-                cur.execute("INSERT INTO schema_info (version,filename) values (?,?)", (data["version"], data["file"]))
+                cur.execute("INSERT INTO schema_info (version,filename) values (?,?)",
+                            (data["version"], data["file"]))
                 conn.commit()
 
     except sqlite3.OperationalError as err:
         print "EXCEPT"
         print err
+
 
 @cbpi.initalizer(order=-9999)
 def init(app=None):

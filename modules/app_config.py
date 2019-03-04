@@ -1,17 +1,14 @@
 
-import json
-import sys
 import os
-from flask import Flask, render_template, redirect, json, g
-
-
-from flask_socketio import SocketIO, emit
-
+import sys
+import json
 import logging
 
+from flask_socketio import SocketIO, emit
+from flask import Flask, render_template, redirect, json, g
 
-from modules.core.core import CraftBeerPi, ActorBase, SensorBase
 from modules.core.db import DBModel
+from modules.core.core import CraftBeerPi, ActorBase, SensorBase
 
 app = Flask(__name__)
 

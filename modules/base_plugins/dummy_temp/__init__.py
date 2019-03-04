@@ -3,7 +3,7 @@ import subprocess
 import time
 
 from modules import cbpi, socketio
-from modules.core.hardware import  SensorActive
+from modules.core.hardware import SensorActive
 from modules import cbpi
 from modules.core.props import Property
 
@@ -16,7 +16,7 @@ class DummyTempSensor(SensorActive):
 
     @cbpi.action("My Custom Action")
     def my_action(self):
-        print "HELLO WORLD"
+        print("HELLO WORLD")
         pass
 
     def get_unit(self):

@@ -4,8 +4,10 @@ from modules import cbpi, socketio
 from modules.core.baseview import BaseView
 from modules.core.db import DBModel
 
+
 class Kettle(DBModel):
-    __fields__ = ["name","sensor", "heater", "automatic", "logic", "config", "agitator", "target_temp"]
+    __fields__ = ["name", "sensor", "heater", "automatic", "logic", "config", "agitator",
+                  "target_temp"]
     __table_name__ = "kettle"
     __json_fields__ = ["config"]
 
@@ -21,7 +23,6 @@ class Kettle2View(BaseView):
     @classmethod
     def post_init_callback(cls, obj):
         obj.state = False
-
 
     def _post_post_callback(self, m):
         m.state = False
@@ -52,10 +53,12 @@ class Kettle2View(BaseView):
             # Start controller
             if kettle.logic is not None:
                 cfg = kettle.config.copy()
-                cfg.update(dict(api=cbpi, kettle_id=kettle.id, heater=kettle.heater, sensor=kettle.sensor))
+                cfg.update(dict(api=cbpi, kettle_id=kettle.id, heater=kettle.heater,
+                                sensor=kettle.sensor))
                 instance = cbpi.get_controller(kettle.logic).get("class")(**cfg)
                 instance.init()
                 kettle.instance = instance
+
                 def run(instance):
                     instance.run()
                 t = self.api.socketio.start_background_task(target=run, instance=instance)
@@ -68,16 +71,18 @@ class Kettle2View(BaseView):
             cbpi.emit("UPDATE_KETTLE", cbpi.cache.get("kettle").get(id))
         return ('', 204)
 
+
 @cbpi.event("SET_TARGET_TEMP")
 def set_target_temp(id, temp):
-    '''
+    """
     Change Taget Temp Event
     :param id: kettle id
     :param temp: target temp to set
     :return: None
-    '''
+    """
 
-    Kettle2View().postTargetTemp(id,temp)
+    Kettle2View().postTargetTemp(id, temp)
+
 
 @cbpi.backgroundtask(key="read_target_temps", interval=5)
 def read_target_temps(api):
@@ -89,8 +94,9 @@ def read_target_temps(api):
     for key, value in cbpi.cache.get("kettle").iteritems():
         cbpi.save_to_file(key, value.target_temp, prefix="kettle")
 
+
 @cbpi.initalizer()
 def init(cbpi):
     Kettle2View.api = cbpi
-    Kettle2View.register(cbpi.app,route_base='/api/kettle')
+    Kettle2View.register(cbpi.app, route_base='/api/kettle')
     Kettle2View.init_cache()
