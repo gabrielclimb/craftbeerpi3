@@ -17,3 +17,6 @@ yarn.lock
 
 
 modules/ui/package-lock.json
+
+venv
+venv/
